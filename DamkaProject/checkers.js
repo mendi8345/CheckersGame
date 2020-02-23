@@ -1,5 +1,5 @@
 var selectedChecker = undefined;
-var killedCheckersPositionInArray = undefined;
+var positionOfOpponentCheckerToKill = undefined;
 var turn = "white";
 var checkers = [
     { row: 1, cell: 2, color: 'white', isKing: false },
@@ -31,10 +31,10 @@ var checkers = [
     { row: 8, cell: 7, color: 'black', isKing: false },
 
 ];
-var firstBoard = true;
+var firstBoardSet = true;
 function renderCheckers() {
     console.log('rendering checkers', checkers);
-    clearBoard(firstBoard);
+    clearBoard(firstBoardSet);
     for (var i = 0; i < checkers.length; i++) {
         var checker = checkers[i];
         console.log(checker);
@@ -54,7 +54,7 @@ function renderCheckers() {
 function renderChecker(i, color) {
     var checker = document.createElement("div");
     checker.id = "checker-" + i;
-    checker.className = "checker " + color + "-checker crown";
+    checker.className = "checker " + color + "-checker";
     checker.checerPosition = i;
     var crownImg = document.createElement("img");
 
@@ -65,10 +65,10 @@ function renderChecker(i, color) {
         checker.appendChild(crownImg);
     }
 
-    // checker.addEventListener("dragstart",selectChecker,false)
+    // checker.addEventListener("dragstart",selectChecker,false)    
     // checker.draggable="true";
     // checker.ondragstart=drag(event);
-    readyTokillNextMove = forcedKillOnBoard;
+    allowkillNextMove = forcedKillOnBoard;
     checker.addEventListener("click", selectChecker);
     console.log("****************************** ", typeof (checker));
     forcedKillOnBoard = false;
@@ -78,7 +78,7 @@ function renderChecker(i, color) {
 
 
 function selectChecker() {
-    if (readyTokillNextMove) {
+    if (allowkillNextMove) {
         if (this.classList.contains("selected")) {
             console.log(`this checker was already selected`)
             this.classList.remove("selected")
@@ -143,7 +143,7 @@ function isALegalMove(checker, blackCell) {
                     for (var index = 0; index < checkers.length; index++) {
                         var c = checkers[index];
                         if (c.row == checker.row - 1 && c.cell == checker.cell + 1 && c.color != checker.color) {
-                            killedCheckersPositionInArray = index;
+                            positionOfOpponentCheckerToKill = index;
                             isLegalMove = true;
 
                             break;
@@ -157,7 +157,7 @@ function isALegalMove(checker, blackCell) {
                     for (var index = 0; index < checkers.length; index++) {
                         var c = checkers[index];
                         if (c.row == checker.row - 1 && c.cell == checker.cell - 1 && c.color != checker.color) {
-                            killedCheckersPositionInArray = index;
+                            positionOfOpponentCheckerToKill = index;
                             // checkers.splice(index, 1);
                             isLegalMove = true;
                             console.log(isLegalMove, "3333333333333333333333333###########")
@@ -185,7 +185,7 @@ function isALegalMove(checker, blackCell) {
                     for (var index = 0; index < checkers.length; index++) {
                         var c = checkers[index];
                         if (c.row == checker.row + 1 && c.cell == checker.cell + 1 && c.color != checker.color) {
-                            killedCheckersPositionInArray = index;
+                            positionOfOpponentCheckerToKill = index;
                             // checkers.splice(index, 1);
                             isLegalMove = true;
                             break;
@@ -200,7 +200,7 @@ function isALegalMove(checker, blackCell) {
                     for (var index = 0; index < checkers.length; index++) {
                         var c = checkers[index];
                         if (c.row == checker.row + 1 && c.cell == checker.cell - 1 && c.color != checker.color) {
-                            killedCheckersPositionInArray = index;
+                            positionOfOpponentCheckerToKill = index;
                             // checkers.splice(index, 1);
                             isLegalMove = true;
                             break;
