@@ -1,6 +1,7 @@
 var selectedChecker = undefined;
 var positionOfOpponentCheckerToKill = undefined;
 var turn = "white";
+
 var checkers = [
     { row: 1, cell: 2, color: 'white', isKing: false },
     { row: 1, cell: 4, color: 'white', isKing: false },
@@ -31,23 +32,20 @@ var checkers = [
     { row: 8, cell: 7, color: 'black', isKing: false },
 
 ];
-var firstBoard = true;
+var isFirstBoardSet = true;
 function renderCheckers() {
     console.log('rendering checkers', checkers);
-    clearBoard(firstBoard);
+    clearBoard(isFirstBoardSet);
     for (var i = 0; i < checkers.length; i++) {
         var checker = checkers[i];
-        console.log(checker);
         var cell = document.getElementById("cell-" + checker.row + '-' + checker.cell);
         cell.appendChild(renderChecker(i, checker.color));
     }
-
-    // $('.checker').click(selectChecker);
-    if (!firstBoard) {
+    if (!isFirstBoardSet) {
         isThereAWin(checkers, turn);
     }
 
-    firstBoard = false;
+    isFirstBoardSet = false;
 }
 
 
@@ -56,6 +54,9 @@ function renderChecker(i, color) {
     checker.id = "checker-" + i;
     checker.className = "checker " + color + "-checker";
     checker.checerPosition = i;
+    checker.draggable="true";
+   
+    
     var crownImg = document.createElement("img");
 
 
@@ -64,26 +65,26 @@ function renderChecker(i, color) {
         crownImg.src = "images/crown.png";
         checker.appendChild(crownImg);
     }
-
-    // checker.addEventListener("dragstart",selectChecker,false)
-    // checker.draggable="true";
-    // checker.ondragstart=drag(event);
-    allowkillNextMove = forcedKillOnBoard;
-    checker.addEventListener("click", selectChecker);
+    allowkillNextMove = isForcedKillOnBoard;
+    checker.addEventListener("dragstart", selectChecker);
+    checker.addEventListener("drag", selectChecker);
+    // checker.addEventListener("click", selectChecker);
     console.log("****************************** ", typeof (checker));
-    forcedKillOnBoard = false;
+    isForcedKillOnBoard = false;
     return checker;
 }
 
 
 
-function selectChecker() {
+function selectChecker(event) {
+    // event.dataTransfer.setData("Text", event.target.id);
     if (allowkillNextMove) {
-        if (this.classList.contains("selected")) {
-            console.log(`this checker was already selected`)
-            this.classList.remove("selected")
-            return
-        }
+      
+        // if (this.classList.contains("selected")) {
+        //     console.log(`this checker was already selected`)
+        //     this.classList.remove("selected")
+        //     return
+        // }
         priviosSelectedChecker = document.getElementsByClassName("selected")[0];
         console.log("priviosSelectedChecker ==", priviosSelectedChecker);
         if (priviosSelectedChecker != undefined) {
@@ -94,15 +95,15 @@ function selectChecker() {
             console.log("checkerIndex == ", this.checerPosition);
             selectedChecker = checkers[checkerIndex];
             this.classList.add("selected");
-
+            event.dataTransfer.setData("text", ev.target.id);
             madeCellResponsive();
         }
     } else {
-        if (this.classList.contains("selected")) {
-            console.log(`this checker was already selected`)
-            // this.classList.remove("selected")
-            return
-        }
+        // if (this.classList.contains("selected")) {
+        //     console.log(`this checker was already selected`)
+        //     // this.classList.remove("selected")
+        //     return
+        // }
         //     console.log(this);
         priviosSelectedChecker = document.getElementsByClassName("selected")[0];
         console.log("priviosSelectedChecker ==", priviosSelectedChecker);
@@ -114,6 +115,7 @@ function selectChecker() {
             selectedChecker = checkers[checkerIndex];
             console.log(`Finished selecting checker: `, selectedChecker)
             this.classList.add("selected");
+            event.dataTransfer.setData("text", event.target.id);
             madeCellResponsive();
 
         }
@@ -134,7 +136,7 @@ function isALegalMove(checker, blackCell) {
     if (blackCell.children.length <= 0) {
 
         if (checker.color == "black" || checker.isKing || numOfKillInThisTurn > 0) {
-            if ((!(forcedKillOnBoard)) && (cellRow == checkerRow - 1) && (cellColumn == checkerCell + 1 || cellColumn == checkerCell - 1)) {
+            if ((!(isForcedKillOnBoard)) && (cellRow == checkerRow - 1) && (cellColumn == checkerCell + 1 || cellColumn == checkerCell - 1)) {
                 isLegalMove = true;
             }
             if ((cellRow == checkerRow - 2) && (cellColumn == checkerCell + 2)) {
@@ -158,9 +160,7 @@ function isALegalMove(checker, blackCell) {
                         var c = checkers[index];
                         if (c.row == checker.row - 1 && c.cell == checker.cell - 1 && c.color != checker.color) {
                             positionOfOpponentCheckerToKill = index;
-                            // checkers.splice(index, 1);
                             isLegalMove = true;
-                            console.log(isLegalMove, "3333333333333333333333333###########")
                             break;
                         }
                     }
@@ -170,9 +170,7 @@ function isALegalMove(checker, blackCell) {
 
         if (checker.color == "white" || checker.isKing || numOfKillInThisTurn > 0) {
             console.log("2")
-            if ((!(forcedKillOnBoard)) && (cellRow == checkerRow + 1) && (cellColumn == checkerCell + 1 || cellColumn == checkerCell - 1)) {
-                // selectedChecker.row = cellRow;
-                // selectedChecker.cell = cellColumn;
+            if ((!(isForcedKillOnBoard)) && (cellRow == checkerRow + 1) && (cellColumn == checkerCell + 1 || cellColumn == checkerCell - 1)) {
                 console.log("3", checker.color, " ", cellRow, " ", checkerRow)
                 console.log(checker.color == "white")
                 console.log(numOfKillInThisTurn > 0)
@@ -186,7 +184,6 @@ function isALegalMove(checker, blackCell) {
                         var c = checkers[index];
                         if (c.row == checker.row + 1 && c.cell == checker.cell + 1 && c.color != checker.color) {
                             positionOfOpponentCheckerToKill = index;
-                            // checkers.splice(index, 1);
                             isLegalMove = true;
                             break;
                         }
@@ -201,7 +198,6 @@ function isALegalMove(checker, blackCell) {
                         var c = checkers[index];
                         if (c.row == checker.row + 1 && c.cell == checker.cell - 1 && c.color != checker.color) {
                             positionOfOpponentCheckerToKill = index;
-                            // checkers.splice(index, 1);
                             isLegalMove = true;
                             break;
                         }
@@ -225,9 +221,14 @@ function madeCellResponsive() {
         if (cell.children.length <= 0) {
             var allCheckersDivs = document.getElementsByClassName("selected")
             if (allCheckersDivs.length > 0) {
-                // console.log(cell);
-                cell.addEventListener("click", moveSelectedCheckerHere);
+                // cell.addEventListener("click", moveSelectedCheckerHere);
+                cell.addEventListener("dragover", allowDrop);
+                cell.addEventListener("drop", moveSelectedCheckerHere);
+               
             }
         }
     }
 }
+function allowDrop(event) {
+    event.preventDefault();
+  }

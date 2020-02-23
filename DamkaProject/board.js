@@ -1,4 +1,4 @@
-var forcedKillOnBoard = false;
+var isForcedKillOnBoard = false;
 var allowkillNextMove;
 var anotherdKillForThisTurn = false;
 var numOfKillInThisTurn = 0;
@@ -64,8 +64,11 @@ function createCell(rowNum, cellNum) {
     }
     return cell;
 }
-function moveSelectedCheckerHere() {
+function moveSelectedCheckerHere(event) {
+    console.log(this, "555555555555555555555555555555555")
     if (selectedChecker) {
+        event.preventDefault();
+
         var blackCell = this;
         var id = blackCell.id;
         var idParts = id.split('-');
@@ -77,6 +80,8 @@ function moveSelectedCheckerHere() {
         var numOfCheckersBeforMove = checkers.length;
 
         if (isALegalMove(selectedChecker, blackCell)) {
+            var transferredChecker = event.dataTransfer.getData("text");
+            this.appendChild(document.getElementById(transferredChecker));
             selectedChecker.row = cellRow;
             selectedChecker.cell = cell;
 
@@ -96,7 +101,7 @@ function moveSelectedCheckerHere() {
                 numOfKillInThisTurn++;
                 numOfKingsMoveWithoutKill = 0;
             }
-            if (numOfKillInThisTurn > 0 && isThereAForcedKillForThisChecker(selectedChecker,selectedChecker.color)) {
+            if (numOfKillInThisTurn > 0 && isThereAForcedKillForThisChecker(selectedChecker, selectedChecker.color)) {
             } else {
                 if (selectedChecker.isKing) {
                     if (numOfCheckersAfterMove == numOfCheckersBeforMove) {
@@ -148,80 +153,25 @@ function isThereAForcedKillOnBoard() {
             if (allCheckers[i].color != turn) {
                 var checker = allCheckers[i];
                 var color = turn == "white" ? "black" : "white";
-                
-if ( isThereAForcedKillForThisChecker(checker, color)) {
-    forcedKillOnBoard=true;
-    // anotherdKillForThisTurn=false;
-}
+
+                if (isThereAForcedKillForThisChecker(checker, color)) {
+                    isForcedKillOnBoard = true;
+                    // anotherdKillForThisTurn=false;
+                }
             }
         }
     }
-    
-    return forcedKillOnBoard;
+
+    return isForcedKillOnBoard;
 }
 
-// function isThereAForcedKillOnBoard() {
-//     console.log(numOfKillInThisTurn, " =======numOfKillInThisTurn")
-//     if (!(anotherdKillForThisTurn)) {
-//         var allCheckers = checkers;
-//         for (var i = 0; i < allCheckers.length; i++) {
-//             if (allCheckers[i].color != turn) {
-//                 var checker = allCheckers[i];
 
-//                 for (var j = 0; j < allCheckers.length; j++) {
-//                     if (allCheckers[j].color == turn) {
-//                         var opponentChecker = allCheckers[j];
-//                         if (checker.color == "white" || checker.isKing) {
-//                             var emptyCell = document.getElementById("cell-" + (checker.row + 2) + "-" + (checker.cell + 2));
-//                             if (((checker.row + 1 == opponentChecker.row) && (checker.cell + 1 == opponentChecker.cell)) &&
-//                                 (emptyCell != null && emptyCell.children.length <= 0)) {
-//                                 var checkerDiv = document.getElementById("checker-" + i)
-//                                 checkerDiv.classList.add("ready-to-kill");
-//                                 console.log("There is A Forced Kill on row" + checker.row + " " + checker.cell)
-//                                 forcedKillOnBoard = true;
-//                             }
-//                             emptyCell = document.getElementById("cell-" + (checker.row + 2) + "-" + (checker.cell - 2));
-//                             if (((checker.row + 1 == opponentChecker.row) && (checker.cell - 1 == opponentChecker.cell)) &&
-//                                 (emptyCell != null && emptyCell.children.length <= 0)) {
-//                                 var checkerDiv = document.getElementById("checker-" + i)
-//                                 checkerDiv.classList.add("ready-to-kill");
-//                                 console.log("There is A Forced Kill on row" + checker.row + " " + checker.cell)
-//                                 forcedKillOnBoard = true;
-//                             }
-//                         }
-
-//                         if (checker.color == "black" || checker.isKing) {
-//                             var emptyCell = document.getElementById("cell-" + (checker.row - 2) + "-" + (checker.cell + 2));
-//                             if (((checker.row - 1 == opponentChecker.row) && (checker.cell + 1 == opponentChecker.cell)) &&
-//                                 (emptyCell != null && emptyCell.children.length <= 0)) {
-//                                 var checkerDiv = document.getElementById("checker-" + i)
-//                                 checkerDiv.classList.add("ready-to-kill");
-//                                 console.log("There is A Forced Kill on row" + checker.row + " " + checker.cell)
-//                                 forcedKillOnBoard = true;
-//                             }
-//                             emptyCell = document.getElementById("cell-" + (checker.row - 2) + "-" + (checker.cell - 2));
-//                             if (((checker.row - 1 == opponentChecker.row) && (checker.cell - 1 == opponentChecker.cell)) &&
-//                                 (emptyCell != null && emptyCell.children.length <= 0)) {
-//                                 var checkerDiv = document.getElementById("checker-" + i)
-//                                 checkerDiv.classList.add("ready-to-kill");
-//                                 console.log("There is A Forced Kill on row" + checker.row + " " + checker.cell)
-//                                 forcedKillOnBoard = true;
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//         }
-//     }
-
-//     return forcedKillOnBoard;
-// }
 function isThereAForcedKillForThisChecker(checker, checkerColor) {
-    
+
     var emptyCell;
-        anotherdKillForThisTurn = false;
+    anotherdKillForThisTurn = false;
     var allCheckers = checkers;
-    console.log("checkerColor=",checkerColor)
+    console.log("checkerColor=", checkerColor)
     for (var j = 0; j < allCheckers.length; j++) {
         if (allCheckers[j].color != checkerColor) {
             var opponentChecker = allCheckers[j];
@@ -240,7 +190,7 @@ function isThereAForcedKillForThisChecker(checker, checkerColor) {
                     (emptyCell != null && emptyCell.children.length <= 0)) {
                     var checkerDiv = document.getElementById("cell-" + (checker.row) + "-" + (checker.cell)).firstChild;
                     checkerDiv.classList.add("ready-to-kill");
-                    console.log("checkerColor=",checkerColor," opponentChecker.row =",opponentChecker.row, " opponentChecker.cell=" ,opponentChecker.cell)
+                    console.log("checkerColor=", checkerColor, " opponentChecker.row =", opponentChecker.row, " opponentChecker.cell=", opponentChecker.cell)
                     console.log("There is A Forced Kill on row" + checker.row + " " + checker.cell)
                     anotherdKillForThisTurn = true;
                 }
@@ -274,12 +224,12 @@ function isThereAForcedKillForThisChecker(checker, checkerColor) {
 
 
 function isThereAWin(checkers, turn) {
-    opponentOutOfCheckers(checkers);
-    opponentCannotMoveWin(turn);
+    checkIfopponentOutOfCheckers(checkers);
+    checkIfOpponentCannotMove(turn);
 }
 
 
-function opponentOutOfCheckers(checkers) {
+function checkIfopponentOutOfCheckers(checkers) {
     var numOfBlackCheckers = 0;
     var numOfWhiteCheckers = 0;
     for (let index = 0; index < checkers.length; index++) {
@@ -303,7 +253,7 @@ function opponentOutOfCheckers(checkers) {
         alert("GAME OVER: BLACK PLYAR WON")
     }
 }
-function opponentCannotMoveWin(turn) {
+function checkIfOpponentCannotMove(turn) {
     var win = true;
     var color = turn == "white" ? "black" : "white";
     var allBlackCells = document.getElementsByClassName("cell black");
@@ -338,61 +288,4 @@ function isDraw(numOfKingsMoveWithoutKill) {
 }
 
 
-// function isThereAForcedKillForThisChecker(checker) {
-
-//     console.log(numOfKillInThisTurn, " =======numOfKillInThisTurn")
-//     anotherdKillForThisTurn = false;
-//     var allCheckers = checkers;
-
-//     console.log("checker.color!!!!!", checker.color)
-//     for (var j = 0; j < allCheckers.length; j++) {
-//         if (allCheckers[j].color != turn) {
-//             console.log("ppppppppppp", allCheckers[j])
-//             var opponentChecker = allCheckers[j];
-
-//             if (checker.color == "white" || checker.isKing || numOfKillInThisTurn > 0) {
-//                 console.log("in function isThereAForcedKillForThisChecker")
-//                 var emptyCell = document.getElementById("cell-" + (checker.row + 2) + "-" + (checker.cell + 2));
-//                 if (((checker.row + 1 == opponentChecker.row) && (checker.cell + 1 == opponentChecker.cell)) &&
-//                     (emptyCell != null && emptyCell.children.length <= 0)) {
-//                     var checkerDiv = document.getElementById("cell-" + (checker.row) + "-" + (checker.cell)).firstChild;
-//                     checkerDiv.classList.add("ready-to-kill");
-//                     // checkerDiv.classList.add("selected");
-//                     console.log("There is A Forced Kill on row" + checker.row + " " + checker.cell)
-//                     anotherdKillForThisTurn = true;
-//                 }
-//                 emptyCell = document.getElementById("cell-" + (checker.row + 2) + "-" + (checker.cell - 2));
-//                 if (((checker.row + 1 == opponentChecker.row) && (checker.cell - 1 == opponentChecker.cell)) &&
-//                     (emptyCell != null && emptyCell.children.length <= 0)) {
-//                     var checkerDiv = document.getElementById("cell-" + (checker.row) + "-" + (checker.cell)).firstChild;
-//                     checkerDiv.classList.add("ready-to-kill");
-//                     console.log("There is A Forced Kill on row" + checker.row + " " + checker.cell)
-//                     anotherdKillForThisTurn = true;
-//                 }
-//             }
-
-//             if (checker.color == "black" || checker.isKing || numOfKillInThisTurn > 0) {
-//                 console.log("There is A Forced Kill on row" + checker.row + " " + checker.cell)
-
-//                 var emptyCell = document.getElementById("cell-" + (checker.row - 2) + "-" + (checker.cell + 2));
-//                 if (((checker.row - 1 == opponentChecker.row) && (checker.cell + 1 == opponentChecker.cell)) &&
-//                     (emptyCell != null && emptyCell.children.length <= 0)) {
-//                     var checkerDiv = document.getElementById("cell-" + (checker.row) + "-" + (checker.cell)).firstChild;
-//                     checkerDiv.classList.add("ready-to-kill");
-//                     console.log("There is A Forced Kill on row" + checker.row + " " + checker.cell)
-//                     anotherdKillForThisTurn = true;
-//                 }
-//                 emptyCell = document.getElementById("cell-" + (checker.row - 2) + "-" + (checker.cell - 2));
-//                 if (((checker.row - 1 == opponentChecker.row) && (checker.cell - 1 == opponentChecker.cell)) &&
-//                     (emptyCell != null && emptyCell.children.length <= 0)) {
-//                     var checkerDiv = document.getElementById("cell-" + (checker.row) + "-" + (checker.cell)).firstChild;
-//                     checkerDiv.classList.add("ready-to-kill");
-//                     console.log("There is A Forced Kill on row" + checker.row + " " + checker.cell)
-//                     anotherdKillForThisTurn = true;
-//                 }
-//             }
-//         }
-//     }
-//     return anotherdKillForThisTurn;
-// }
 
