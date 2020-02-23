@@ -58,11 +58,12 @@ function renderChecker(i, color) {
    
     
     var crownImg = document.createElement("img");
+    var crownImg = document.createElement("i");
 
 
     if (checkers[i].isKing) {
-        crownImg.className = "crown-img";
-        crownImg.src = "images/crown.png";
+        crownImg.className = "fas fa-crown";
+        // crownImg.src = "images/crown.png";
         checker.appendChild(crownImg);
     }
     allowkillNextMove = isForcedKillOnBoard;
