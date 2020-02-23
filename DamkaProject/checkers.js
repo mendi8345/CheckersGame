@@ -31,10 +31,10 @@ var checkers = [
     { row: 8, cell: 7, color: 'black', isKing: false },
 
 ];
-var firstBoardSet = true;
+var firstBoard = true;
 function renderCheckers() {
     console.log('rendering checkers', checkers);
-    clearBoard(firstBoardSet);
+    clearBoard(firstBoard);
     for (var i = 0; i < checkers.length; i++) {
         var checker = checkers[i];
         console.log(checker);
@@ -65,7 +65,7 @@ function renderChecker(i, color) {
         checker.appendChild(crownImg);
     }
 
-    // checker.addEventListener("dragstart",selectChecker,false)    
+    // checker.addEventListener("dragstart",selectChecker,false)
     // checker.draggable="true";
     // checker.ondragstart=drag(event);
     allowkillNextMove = forcedKillOnBoard;

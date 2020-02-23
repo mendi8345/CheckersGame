@@ -3,7 +3,7 @@ body {
     text-align: center;
 }
 #board {
-    background-image: url(images/black-marble.jpg);
+    background-image: url("images/black-marble.jpg");
     display: inline-block;
     padding: 1vmin;
 }

@@ -126,8 +126,8 @@ function parity(num) {
     return (num % 2 == 0) ? 'even' : 'odd';
 }
 
-function clearBoard(firstBoardSet) {
-    if (!firstBoardSet) {
+function clearBoard(firstBoard) {
+    if (!firstBoard) {
 
         var blackCells = document.getElementsByClassName("black cell");
         console.log(blackCells);
@@ -151,7 +151,7 @@ function isThereAForcedKillOnBoard() {
                 
 if ( isThereAForcedKillForThisChecker(checker, color)) {
     forcedKillOnBoard=true;
-  
+    // anotherdKillForThisTurn=false;
 }
             }
         }
