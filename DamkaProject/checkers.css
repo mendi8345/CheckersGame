@@ -74,6 +74,8 @@ i{
     margin: 0;
     border: 1vmin solid rgba(255,255,255,0.5);
     background-repeat: no-repeat;
+    animation: blinker 200s linear infinite;
+    /* opacity: 0; */
 }
 
 .out-of-play {
