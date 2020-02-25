@@ -45,6 +45,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    animation: blinker 10000000s linear infinite;
+    
 }
 
  .white-checker { 
@@ -63,6 +65,7 @@ img{
      
     background-size: cover; 
     color: #cccccc;
+    
 }
 
 i{
@@ -92,7 +95,17 @@ i{
       opacity: 0;
     }
   }
-
-
+  #reset{
+  display: block;
+  border: 0;
+  color: #F1F1FF;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 20px auto 10px;
+  padding: 10px;
+  background-color: #16A8C7;
+  box-shadow: 1px 1px 3px #232621;
+  transition: background-color 0.15s 
+  }
 
 
