@@ -68,7 +68,7 @@ function renderChecker(i, color) {
     checker.addEventListener("dragstart", selectChecker);
     checker.addEventListener("drag", selectChecker);
     checker.addEventListener("click", selectChecker);
-    // checker.addEventListener("click", selectChecker);
+    
     console.log("****************************** ", typeof (checker));
     isForcedKillOnBoard = false;
     return checker;
@@ -77,7 +77,13 @@ function renderChecker(i, color) {
 
 
 function selectChecker(event) {
-    if (isforcedKillOnBoardNextTurn) {
+    console.log("isforcedKillOnBoardNextTurn===",isforcedKillOnBoardNextTurn)
+    if (isforcedKillOnBoardNextTurn ||anotherdKillForThisTurn   ) {
+        // if (this.classList.contains("selected")) {
+        //     console.log(`this checker was already selected`)
+        //     this.classList.remove("selected")
+        //     return
+        // }
         priviosSelectedChecker = document.getElementsByClassName("selected")[0];
         console.log("priviosSelectedChecker ==", priviosSelectedChecker);
         if (priviosSelectedChecker != undefined) {
@@ -88,7 +94,7 @@ function selectChecker(event) {
             console.log("checkerIndex == ", this.checerPosition);
             selectedChecker = checkers[checkerIndex];
             this.classList.add("selected");
-            event.dataTransfer.setData("text", ev.target.id);
+            event.dataTransfer.setData("text", event.target.id);
             madeCellResponsive();
         }
     } else {

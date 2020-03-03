@@ -78,7 +78,7 @@ function moveSelectedCheckerHere(event) {
         cellRow = Number(idParts[1])
         cell = Number(idParts[2]);
         var numOfCheckersBeforMove = checkers.length;
-
+console.log("111111111111111111111111111")
         if (isALegalMove(selectedChecker, blackCell)) {
             var transferredChecker = event.dataTransfer.getData("text");
             this.appendChild(document.getElementById(transferredChecker));
