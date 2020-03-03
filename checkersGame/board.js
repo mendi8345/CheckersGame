@@ -1,8 +1,9 @@
 var isForcedKillOnBoard = false;
-var allowkillNextMove;
+var isforcedKillOnBoardNextTurn;
 var anotherdKillForThisTurn = false;
 var numOfKillInThisTurn = 0;
 var numOfKingsMoveWithoutKill = 0;
+
 function createBoard() {
     var board = document.createElement("div");
     board.id = "board";
@@ -18,8 +19,7 @@ function createBoard() {
             createRow(8)
         ];
     for (var i = 0; i < board.rows.length; i++) {
-        console.log(board.rows[i].id);
-        console.log(board.rows[i]);
+     
         board.insertBefore(board.rows[i], board.childNodes[i]);
     }
     document.body.appendChild(board);
@@ -64,8 +64,8 @@ function createCell(rowNum, cellNum) {
     }
     return cell;
 }
+
 function moveSelectedCheckerHere(event) {
-    console.log(this, "555555555555555555555555555555555")
     if (selectedChecker) {
         event.preventDefault;
 
@@ -108,29 +108,20 @@ function moveSelectedCheckerHere(event) {
                         numOfKingsMoveWithoutKill++;
                         isDraw(numOfKingsMoveWithoutKill);
                     }
-                } else {
-                    numOfKingsMoveWithoutKill = 0;
-                }
+                } 
                 numOfKillInThisTurn = 0;
-                console.log("numOfKillInThisTurn 1 ==",numOfKillInThisTurn)
                 isThereAForcedKillOnBoard();
                 selectedChecker = undefined;
                 turn = turn == "white" ? "black" : "white";
-                console.log("numOfKillInThisTurn 2 ==",numOfKillInThisTurn)
-                
-                
             }
         }
-
     }
-    console.log(`select a checker, foo!`)
 }
+
 
 function cellColor(cellNum, rowNum) {
     return parity(cellNum) == parity(rowNum) ? 'white' : 'black'
 }
-
-/*** Helper Methods ***/
 function parity(num) {
     return (num % 2 == 0) ? 'even' : 'odd';
 }
@@ -249,12 +240,12 @@ function checkIfopponentOutOfCheckers(checkers) {
         }
     }
     if (numOfBlackCheckers == 0) {
-        clearBoard();
-        alert("GAME OVER: WHITE PLYAR WON")
+        setTimeout( function (){ alert("GAME OVER: WHITE PLYAR WON")}, 30)
+        setTimeout(function () {  clearBoard(); }, 35)
     }
     if (numOfWhiteCheckers == 0) {
-        clearBoard();
-        alert("GAME OVER: BLACK PLYAR WON")
+        setTimeout( function (){alert("GAME OVER: BLACK PLYAR WON")}, 30)
+        setTimeout(function () {  clearBoard() }, 35)
     }
 }
 function checkIfOpponentCannotMove(turn) {
@@ -275,27 +266,20 @@ function checkIfOpponentCannotMove(turn) {
                 break;
             }
         }
-
     }
     if (win) {
-        alert("GAME OVER: " + turn + " PLYAR WON," + color + "Cannot Move")
-        setTimeout(function () { clearBoard(); }, 4000)
-        // var resetGameButton =document.createElement("button")
-        // resetGameButton.id ="reset";
-        // resetGameButton.addEventListener("click",createBoard)
-        // document.body.appendChild(resetGameButton)
-    }
-   
-    // <button id="cleargame">Reset Game</button>
+       var message ="GAME OVER: " + turn + " PLYAR WON," + color + "Cannot Move"
+       setTimeout( function (){ alert(message)}, 30)
+       setTimeout(function () {  clearBoard() }, 35)
     console.log("win ===", win)
     console.log("turn====================================", turn)
     return win;
 }
+}
 function isDraw(numOfKingsMoveWithoutKill) {
     if (numOfKingsMoveWithoutKill > 15) {
-        alert("DRAW: GAME OVER")
+        
+        setTimeout( function () { alert("DRAW: GAME OVER")}, 30)
+        setTimeout(function () {  clearBoard(); }, 35)
     }
 }
-
-
-
