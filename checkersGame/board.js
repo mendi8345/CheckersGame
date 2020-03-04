@@ -2,7 +2,7 @@ var isForcedKillOnBoard = false;
 var isforcedKillOnBoardNextTurn;
 var anotherdKillForThisTurn = false;
 var numOfKillInThisTurn = 0;
-var numOfKingsMoveWithoutKill = 0;
+var numOfKingsMovesWithoutKill = 0;
 
 function createBoard() {
     var board = document.createElement("div");
@@ -68,17 +68,16 @@ function createCell(rowNum, cellNum) {
 function moveSelectedCheckerHere(event) {
     if (selectedChecker) {
         event.preventDefault;
+        var numOfCheckersBeforMove = checkers.length;
 
         var blackCell = this;
         var id = blackCell.id;
         var idParts = id.split('-');
         checkerRow = selectedChecker.row;
         checkerCell = selectedChecker.cell;
-
         cellRow = Number(idParts[1])
         cell = Number(idParts[2]);
-        var numOfCheckersBeforMove = checkers.length;
-console.log("111111111111111111111111111")
+
         if (isALegalMove(selectedChecker, blackCell)) {
             var transferredChecker = event.dataTransfer.getData("text");
             this.appendChild(document.getElementById(transferredChecker));
@@ -89,24 +88,19 @@ console.log("111111111111111111111111111")
                 checkers.splice(positionOfOpponentCheckerToKill, 1);
                 positionOfOpponentCheckerToKill = undefined;
             }
-
-            if (selectedChecker.color == `black` && selectedChecker.row == 1) {
-                selectedChecker.isKing = true
-            } else if (selectedChecker.color == `white` && selectedChecker.row == 8) {
-                selectedChecker.isKing = true
-            }
+            crownKing(selectedChecker.color,selectedChecker.row)
             renderCheckers();
             var numOfCheckersAfterMove = checkers.length;
             if (numOfCheckersAfterMove != numOfCheckersBeforMove) {
                 numOfKillInThisTurn++;
-                numOfKingsMoveWithoutKill = 0;
+                numOfKingsMovesWithoutKill = 0;
             }
-            if (numOfKillInThisTurn > 0 && isThereAForcedKillForThisChecker(selectedChecker, selectedChecker.color)) {
-            } else {
+
+            if ((numOfKillInThisTurn <= 0 ) && (!(isThereAForcedKillForThisChecker(selectedChecker, selectedChecker.color)))) {
                 if (selectedChecker.isKing) {
                     if (numOfCheckersAfterMove == numOfCheckersBeforMove) {
-                        numOfKingsMoveWithoutKill++;
-                        isDraw(numOfKingsMoveWithoutKill);
+                        numOfKingsMovesWithoutKill++;
+                        isDraw(numOfKingsMovesWithoutKill);
                     }
                 } 
                 numOfKillInThisTurn = 0;
@@ -118,6 +112,13 @@ console.log("111111111111111111111111111")
     }
 }
 
+function crownKing(color,row){
+    if (color == `black` && row == 1) {
+        selectedChecker.isKing = true
+    } else if (color == `white` && row == 8) {
+        selectedChecker.isKing = true
+    }
+}
 
 function cellColor(cellNum, rowNum) {
     return parity(cellNum) == parity(rowNum) ? 'white' : 'black'
@@ -276,8 +277,8 @@ function checkIfOpponentCannotMove(turn) {
     return win;
 }
 }
-function isDraw(numOfKingsMoveWithoutKill) {
-    if (numOfKingsMoveWithoutKill > 15) {
+function isDraw(numOfKingsMovesWithoutKill) {
+    if (numOfKingsMovesWithoutKill > 15) {
         
         setTimeout( function () { alert("DRAW: GAME OVER")}, 30)
         setTimeout(function () {  clearBoard(); }, 35)

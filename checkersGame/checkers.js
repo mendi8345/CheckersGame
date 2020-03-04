@@ -2,36 +2,36 @@ var selectedChecker = undefined;
 var positionOfOpponentCheckerToKill = undefined;
 var turn = "white";
 
-var checkers= [
-        { row: 1, cell: 2, color: 'white', isKing: false },
-        { row: 1, cell: 4, color: 'white', isKing: false },
-        { row: 1, cell: 6, color: 'white', isKing: false },
-        { row: 1, cell: 8, color: 'white', isKing: false },
-        { row: 2, cell: 1, color: 'white', isKing: false },
-        { row: 2, cell: 3, color: 'white', isKing: false },
-        { row: 2, cell: 5, color: 'white', isKing: false },
-        { row: 2, cell: 7, color: 'white', isKing: false },
-        { row: 3, cell: 2, color: 'white', isKing: false },
-        { row: 3, cell: 4, color: 'white', isKing: false },
-        { row: 3, cell: 6, color: 'white', isKing: false },
-        { row: 3, cell: 8, color: 'white', isKing: false },
+var checkers = [
+    { row: 1, cell: 2, color: 'white', isKing: false },
+    { row: 1, cell: 4, color: 'white', isKing: false },
+    { row: 1, cell: 6, color: 'white', isKing: false },
+    { row: 1, cell: 8, color: 'white', isKing: false },
+    { row: 2, cell: 1, color: 'white', isKing: false },
+    { row: 2, cell: 3, color: 'white', isKing: false },
+    { row: 2, cell: 5, color: 'white', isKing: false },
+    { row: 2, cell: 7, color: 'white', isKing: false },
+    { row: 3, cell: 2, color: 'white', isKing: false },
+    { row: 3, cell: 4, color: 'white', isKing: false },
+    { row: 3, cell: 6, color: 'white', isKing: false },
+    { row: 3, cell: 8, color: 'white', isKing: false },
 
 
 
-        { row: 6, cell: 1, color: 'black', isKing: false },
-        { row: 6, cell: 3, color: 'black', isKing: false },
-        { row: 6, cell: 5, color: 'black', isKing: false },
-        { row: 6, cell: 7, color: 'black', isKing: false },
-        { row: 7, cell: 2, color: 'black', isKing: false },
-        { row: 7, cell: 4, color: 'black', isKing: false },
-        { row: 7, cell: 6, color: 'black', isKing: false },
-        { row: 7, cell: 8, color: 'black', isKing: false },
-        { row: 8, cell: 1, color: 'black', isKing: false },
-        { row: 8, cell: 3, color: 'black', isKing: false },
-        { row: 8, cell: 5, color: 'black', isKing: false },
-        { row: 8, cell: 7, color: 'black', isKing: false },
+    { row: 6, cell: 1, color: 'black', isKing: false },
+    { row: 6, cell: 3, color: 'black', isKing: false },
+    { row: 6, cell: 5, color: 'black', isKing: false },
+    { row: 6, cell: 7, color: 'black', isKing: false },
+    { row: 7, cell: 2, color: 'black', isKing: false },
+    { row: 7, cell: 4, color: 'black', isKing: false },
+    { row: 7, cell: 6, color: 'black', isKing: false },
+    { row: 7, cell: 8, color: 'black', isKing: false },
+    { row: 8, cell: 1, color: 'black', isKing: false },
+    { row: 8, cell: 3, color: 'black', isKing: false },
+    { row: 8, cell: 5, color: 'black', isKing: false },
+    { row: 8, cell: 7, color: 'black', isKing: false },
 
-    ];
+];
 
 var isFirstBoardSet = true;
 function renderCheckers() {
@@ -42,8 +42,8 @@ function renderCheckers() {
         var cell = document.getElementById("cell-" + checker.row + '-' + checker.cell);
         cell.appendChild(renderChecker(i, checker.color));
     }
-   
-        isThereAWin(checkers, turn)
+
+    isThereAWin(checkers, turn)
     isFirstBoardSet = false;
 }
 
@@ -54,21 +54,18 @@ function renderChecker(i, color) {
     checker.className = "checker " + color + "-checker";
     checker.checerPosition = i;
     checker.draggable = "true";
-
-    // var crownImg = document.createElement("img");
     var crownImg = document.createElement("i");
 
 
     if (checkers[i].isKing) {
         crownImg.className = "fas fa-crown";
-        // crownImg.src = "images/crown.png";
         checker.appendChild(crownImg);
     }
     isforcedKillOnBoardNextTurn = isForcedKillOnBoard;
     checker.addEventListener("dragstart", selectChecker);
     checker.addEventListener("drag", selectChecker);
     checker.addEventListener("click", selectChecker);
-    
+
     console.log("****************************** ", typeof (checker));
     isForcedKillOnBoard = false;
     return checker;
@@ -77,43 +74,29 @@ function renderChecker(i, color) {
 
 
 function selectChecker(event) {
-    console.log("isforcedKillOnBoardNextTurn===",isforcedKillOnBoardNextTurn)
-    if (isforcedKillOnBoardNextTurn ||anotherdKillForThisTurn   ) {
-        // if (this.classList.contains("selected")) {
-        //     console.log(`this checker was already selected`)
-        //     this.classList.remove("selected")
-        //     return
-        // }
-        priviosSelectedChecker = document.getElementsByClassName("selected")[0];
-        console.log("priviosSelectedChecker ==", priviosSelectedChecker);
-        if (priviosSelectedChecker != undefined) {
-            priviosSelectedChecker.classList.remove("selected");
-        }
-        var checkerIndex = this.checerPosition;
-        if (checkers[checkerIndex].color == turn && this.classList.contains("ready-to-kill")) {
-            console.log("checkerIndex == ", this.checerPosition);
-            selectedChecker = checkers[checkerIndex];
-            this.classList.add("selected");
-            event.dataTransfer.setData("text", event.target.id);
-            madeCellResponsive();
-        }
-    } else {
-        priviosSelectedChecker = document.getElementsByClassName("selected")[0];
-        console.log("priviosSelectedChecker ==", priviosSelectedChecker);
-        if (priviosSelectedChecker != undefined) {
-            priviosSelectedChecker.classList.remove("selected");
-        }
-        var checkerIndex = this.checerPosition;
-        if (checkers[checkerIndex].color == turn) {
-            selectedChecker = checkers[checkerIndex];
-            console.log(`Finished selecting checker: `, selectedChecker)
-            this.classList.add("selected");
-            event.dataTransfer.setData("text", event.target.id);
-            madeCellResponsive();
+    priviosSelectedChecker = document.getElementsByClassName("selected")[0];
+    console.log("anotherdKillForThisTurn ==", anotherdKillForThisTurn);
+    if (priviosSelectedChecker != undefined && (!(anotherdKillForThisTurn))) {
+        priviosSelectedChecker.classList.remove("selected");
+    }
+    var checkerIndex = this.checerPosition;
+    if (checkers[checkerIndex].color == turn && this.classList.contains("ready-to-kill")) {
+        console.log("checkerIndex == ", this.checerPosition);
+        selectedChecker = checkers[checkerIndex];
+        this.classList.add("selected");
+        event.dataTransfer.setData("text", event.target.id);
+        madeCellResponsive();
+    }
+    else if ((!(isforcedKillOnBoardNextTurn || anotherdKillForThisTurn)) && (checkers[checkerIndex].color == turn)) {
+        selectedChecker = checkers[checkerIndex];
+        console.log(`Finished selecting checker: `, selectedChecker)
+        this.classList.add("selected");
+        event.dataTransfer.setData("text", event.target.id);
+        madeCellResponsive();
 
-        }
     }
 }
+
 
 
 function isALegalMove(checker, blackCell) {
@@ -214,7 +197,6 @@ function madeCellResponsive() {
         if (cell.children.length <= 0) {
             var allCheckersDivs = document.getElementsByClassName("selected")
             if (allCheckersDivs.length > 0) {
-                // cell.addEventListener("click", moveSelectedCheckerHere);
                 cell.addEventListener("dragover", allowDrop);
                 cell.addEventListener("drop", moveSelectedCheckerHere);
 
