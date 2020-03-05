@@ -96,17 +96,19 @@ function moveSelectedCheckerHere(event) {
                 numOfKingsMovesWithoutKill = 0;
             }
 
-            if ((numOfKillInThisTurn <= 0 ) && (!(isThereAForcedKillForThisChecker(selectedChecker, selectedChecker.color)))) {
-                if (selectedChecker.isKing) {
-                    if (numOfCheckersAfterMove == numOfCheckersBeforMove) {
-                        numOfKingsMovesWithoutKill++;
-                        isDraw(numOfKingsMovesWithoutKill);
-                    }
-                } 
-                numOfKillInThisTurn = 0;
-                isThereAForcedKillOnBoard();
-                selectedChecker = undefined;
-                turn = turn == "white" ? "black" : "white";
+            if ((numOfKillInThisTurn > 0 ) && (isThereAForcedKillForThisChecker(selectedChecker, selectedChecker.color))) {
+            }else{
+                 if (selectedChecker.isKing) {
+                if (numOfCheckersAfterMove == numOfCheckersBeforMove) {
+                    numOfKingsMovesWithoutKill++;
+                    isDraw(numOfKingsMovesWithoutKill);
+                }
+            } 
+            numOfKillInThisTurn = 0;
+            isThereAForcedKillOnBoard();
+            selectedChecker = undefined;
+            turn = turn == "white" ? "black" : "white";
+               
             }
         }
     }
@@ -269,12 +271,13 @@ function checkIfOpponentCannotMove(turn) {
         }
     }
     if (win) {
+        console.log("turn =====",turn)
        var message ="GAME OVER: " + turn + " PLYAR WON," + color + "Cannot Move"
        setTimeout( function (){ alert(message)}, 30)
        setTimeout(function () {  clearBoard() }, 35)
     console.log("win ===", win)
     console.log("turn====================================", turn)
-    return win;
+    return false;
 }
 }
 function isDraw(numOfKingsMovesWithoutKill) {
